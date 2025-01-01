@@ -1,0 +1,33 @@
+class Solution {
+    public int[][] imageSmoother(int[][] img) {
+        int rows = img.length;
+        int cols = img[0].length;
+        int[][] nimg = new int[rows][cols]; 
+
+        for (int i = 0; i < rows; i++) {
+            for (int j = 0; j < cols; j++) {
+                nimg[i][j] = avg(i, j, img);
+            }
+        }
+        return nimg;
+    }
+
+    
+    public int avg(int i, int j, int[][] img) {
+        int sum = 0, c=0;
+     
+        for (int di = -1; di <= 1; di++) {
+            for (int dj = -1; dj <= 1; dj++) {
+                int ni = i + di; 
+                int nj = j + dj;
+
+                if (ni >= 0 && ni < img.length && nj >= 0 && nj < img[0].length) {
+                    sum += img[ni][nj];
+                    c++;
+                }
+            }
+        }
+
+        return sum / c;
+    }
+}
