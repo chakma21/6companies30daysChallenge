@@ -1,0 +1,57 @@
+class Solution {
+    public String getHint(String secret, String guess) {
+        
+        HashMap<Character, List<Integer>> maps=new HashMap<>();
+        HashMap<Character, List<Integer>> mapg=new HashMap<>();
+        for (int i=0;i<secret.length();i++){
+           maps.putIfAbsent(secret.charAt(i), new ArrayList<>()); // Initialize list if absent
+           maps.get(secret.charAt(i)).add(i); // Append index to the list
+
+    // Add index to mapg
+            mapg.putIfAbsent(guess.charAt(i), new ArrayList<>()); // Initialize list if absent
+            mapg.get(guess.charAt(i)).add(i);
+        } 
+        int bull=0,cow=0;
+        // Set to track used indices
+        Set<Integer> usedSecretIndices = new HashSet<>();
+        Set<Integer> usedGuessIndices = new HashSet<>();
+
+        // Calculate bulls (exact matches)
+        for (int i = 0; i < secret.length(); i++) {
+            if (secret.charAt(i) == guess.charAt(i)) {
+                bull++;
+                usedSecretIndices.add(i);
+                usedGuessIndices.add(i);
+            }
+        }
+
+        // Calculate cows (non-exact matches)
+        for (Map.Entry<Character, List<Integer>> entry : mapg.entrySet()) {
+            char guessChar = entry.getKey();
+            List<Integer> guessIndices = entry.getValue();
+
+            if (maps.containsKey(guessChar)) {
+                List<Integer> secretIndices = maps.get(guessChar);
+
+                for (int guessIndex : guessIndices) {
+                    if (usedGuessIndices.contains(guessIndex)) {
+                        continue; // Skip already used guess indices
+                    }
+
+                    for (int secretIndex : secretIndices) {
+                        if (!usedSecretIndices.contains(secretIndex)) {
+                            // Count as a cow and mark indices as used
+                            cow++;
+                            usedSecretIndices.add(secretIndex);
+                            usedGuessIndices.add(guessIndex);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        String s=bull+"A"+cow+"B";
+     
+        return s;
+    }
+}
