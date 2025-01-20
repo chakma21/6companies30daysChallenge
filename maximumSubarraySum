@@ -1,0 +1,56 @@
+class Solution {
+    public long maximumSubarraySum(int[] nums, int k) {
+        long ans=0,sum=0;
+        Deque<Integer> deq=new ArrayDeque<>();
+        Set<Integer> set=new HashSet<>();
+        for (int i = 0; i < nums.length; i++) {
+            // Add the current element to the window
+            while (set.contains(nums[i])) {
+                // Remove elements from the front until duplicate is gone
+                int removed = deq.removeFirst();
+                set.remove(removed);
+                sum -= removed;
+            }
+
+            // Add the current element to deque and set
+            deq.addLast(nums[i]);
+            set.add(nums[i]);
+            sum += nums[i];
+
+            // Ensure the sliding window size is exactly k
+            if (deq.size() > k) {
+                int removed = deq.removeFirst();
+                set.remove(removed);
+                sum -= removed;
+            }
+
+            // Update the answer if the window size is k
+            if (deq.size() == k) {
+                ans = Math.max(ans, sum);
+            }
+        }
+
+        return ans;
+    }
+
+    //     long ans=0;
+
+    //     for (int i=0;i<=nums.length-k;i++){
+            
+    //         ans=Math.max(ans,check(nums,k,i));      
+    //     }
+    //     return ans;
+    // }
+    // public long check(int[] nums, int k, int in){
+    //     Set<Integer> set=new HashSet<>();
+    //     long sum=0;
+    //     for (int i=in;i<in+k;i++){
+    //         if (set.contains(nums[i])){
+    //             return 0;
+    //         }
+    //         sum+=nums[i];
+    //         set.add(nums[i]);
+    //     }
+    //     return sum;
+    // }
+}
