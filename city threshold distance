@@ -1,0 +1,54 @@
+class Solution {
+    public int findTheCity(int n, int[][] edges, int distanceThreshold) {
+        int[][] costmatrix=new int[n][n];
+        for (int i=0;i<n;i++){
+            for (int j=0;j<n;j++){
+                costmatrix[i][j]=Integer.MAX_VALUE;
+            }
+        }
+        for (int i=0;i<edges.length;i++){
+            costmatrix[edges[i][0]][edges[i][1]]=edges[i][2];
+            costmatrix[edges[i][1]][edges[i][0]]=edges[i][2];
+
+        }
+        for (int i=0;i<n;i++){
+            costmatrix[i][i]=0;
+        }
+
+        // floyd warshall for multisource
+
+        findcost(costmatrix);
+        int city=-1,minreach=Integer.MAX_VALUE;
+        // now we will go through all the cost in the matrix and for each city
+        // will check the count of how many cities are at threshold distance
+        // the minreach will have the count of no.of cities are at threshold for every city chosen
+        // and city will count from which city the min no.of cities are at threshold distance
+        // and in case of tie we take the city no. which is higher
+
+        for (int i=0;i<n;i++){
+            int count=0;
+            for (int j=0;j<n;j++){
+                if (costmatrix[i][j]<=distanceThreshold){
+                    count++;
+                }
+            }
+            if (count<=minreach){
+                minreach=count;
+                city =i;
+            }
+        }
+        return city;
+
+    }
+    public void findcost(int[][] costmatrix){
+        for (int via=0;via<costmatrix.length;via++){
+            for (int i=0;i<costmatrix.length;i++){
+                for (int j=0;j<costmatrix.length;j++){
+                    if (costmatrix[i][via]==Integer.MAX_VALUE || costmatrix[via][j]==Integer.MAX_VALUE) continue;
+                    costmatrix[i][j]=Math.min(costmatrix[i][j],costmatrix[i][via]+costmatrix[via][j]);
+                }
+            
+            }
+        }
+    }
+}
